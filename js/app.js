@@ -128,9 +128,28 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    // Update progress bar
+    function updateProgressBar(tasks) {
+        const progressBar = document.getElementById('progress-bar');
+        if (!progressBar) return;
+        
+        if (tasks.length === 0) {
+            progressBar.style.width = '0%';
+            return;
+        }
+        
+        const completedTasks = tasks.filter(task => task.completed).length;
+        const percentage = Math.round((completedTasks / tasks.length) * 100);
+        
+        progressBar.style.width = percentage + '%';
+    }
+    
     // Render the task list
     function renderTasks() {
         const tasks = loadTasks();
+        
+        // Update progress bar
+        updateProgressBar(tasks);
         
         // Clear the current list
         taskList.innerHTML = '';
