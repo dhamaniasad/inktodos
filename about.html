@@ -6,6 +6,17 @@
     <title>About InkTodos</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
+        /* Dark mode variables - must match the ones in style.css */
+        .dark-mode {
+            --bg-color: #121212;
+            --text-color: #f0f0f0;
+            --light-gray: #333333;
+            --medium-gray: #999999;
+            --completed-color: #666666;
+            --focus-color: #f0f0f0;
+            --accent-color: #bbbbbb;
+        }
+        
         /* Additional styles specific to about page */
         .about-container {
             max-width: 800px;
@@ -167,6 +178,25 @@
             font-weight: bold;
         }
         
+        .theme-toggle {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--accent-color);
+            padding: 0.5rem;
+            border-radius: 50%;
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+        
         @media (min-width: 600px) {
             .features {
                 grid-template-columns: 1fr 1fr;
@@ -177,6 +207,7 @@
 <body>
     <div class="about-container">
         <header class="hero">
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">☀</button>
             <h1>InkTodos</h1>
             <p class="tagline">Thoughtfully designed for e-readers, beautifully simple by nature</p>
             
@@ -307,5 +338,54 @@
             <a href="index.html" class="nav-link">« Back to InkTodos App</a>
         </footer>
     </div>
+    
+    <script>
+        // Theme handling for about page
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('theme-toggle');
+            
+            // Check if user previously set a theme preference
+            function initTheme() {
+                const savedTheme = localStorage.getItem('theme');
+                
+                if (savedTheme === 'dark') {
+                    document.body.classList.add('dark-mode');
+                    themeToggle.textContent = '☾';
+                } else if (savedTheme === 'light') {
+                    document.body.classList.remove('dark-mode');
+                    themeToggle.textContent = '☀';
+                } else {
+                    // Check system preference
+                    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    
+                    if (prefersDark) {
+                        document.body.classList.add('dark-mode');
+                        themeToggle.textContent = '☾';
+                    }
+                }
+            }
+            
+            // Toggle theme
+            function toggleTheme() {
+                if (document.body.classList.contains('dark-mode')) {
+                    document.body.classList.remove('dark-mode');
+                    localStorage.setItem('theme', 'light');
+                    themeToggle.textContent = '☀';
+                } else {
+                    document.body.classList.add('dark-mode');
+                    localStorage.setItem('theme', 'dark');
+                    themeToggle.textContent = '☾';
+                }
+            }
+            
+            // Add event listener
+            if (themeToggle) {
+                themeToggle.addEventListener('click', toggleTheme);
+            }
+            
+            // Initialize theme
+            initTheme();
+        });
+    </script>
 </body>
 </html>

@@ -6,6 +6,50 @@ document.addEventListener('DOMContentLoaded', function() {
     const taskInput = document.getElementById('task-input');
     const taskList = document.getElementById('task-list');
     const storageStatus = document.getElementById('storage-status');
+    const themeToggle = document.getElementById('theme-toggle');
+    
+    // Theme handling
+    function initTheme() {
+        // Check if user previously set a theme preference
+        const savedTheme = localStorage.getItem('theme');
+        
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeToggle.textContent = '☾';
+        } else if (savedTheme === 'light') {
+            document.body.classList.remove('dark-mode');
+            themeToggle.textContent = '☀';
+        } else {
+            // Check system preference using media query if available
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (prefersDark) {
+                document.body.classList.add('dark-mode');
+                themeToggle.textContent = '☾';
+            }
+        }
+    }
+    
+    // Toggle theme
+    function toggleTheme() {
+        if (document.body.classList.contains('dark-mode')) {
+            document.body.classList.remove('dark-mode');
+            localStorage.setItem('theme', 'light');
+            themeToggle.textContent = '☀';
+        } else {
+            document.body.classList.add('dark-mode');
+            localStorage.setItem('theme', 'dark');
+            themeToggle.textContent = '☾';
+        }
+    }
+    
+    // Add event listener to theme toggle button
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+    }
+    
+    // Initialize theme
+    initTheme();
     
     // Check if localStorage is available
     function checkStorageAvailability() {

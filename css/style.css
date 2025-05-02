@@ -1,5 +1,6 @@
 /* E-reader friendly styles with high contrast and simple design */
 :root {
+    /* Light mode (default) */
     --bg-color: #ffffff;
     --text-color: #000000;
     --light-gray: #e0e0e0;
@@ -7,6 +8,30 @@
     --completed-color: #aaaaaa;
     --focus-color: #111111;
     --accent-color: #333333;
+}
+
+/* Dark mode */
+.dark-mode {
+    --bg-color: #121212;
+    --text-color: #f0f0f0;
+    --light-gray: #333333;
+    --medium-gray: #999999;
+    --completed-color: #666666;
+    --focus-color: #f0f0f0;
+    --accent-color: #bbbbbb;
+}
+
+/* Media query for devices that support prefers-color-scheme */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #121212;
+        --text-color: #f0f0f0;
+        --light-gray: #333333;
+        --medium-gray: #999999;
+        --completed-color: #666666;
+        --focus-color: #f0f0f0;
+        --accent-color: #bbbbbb;
+    }
 }
 
 * {
@@ -35,6 +60,25 @@ header {
     margin-bottom: 2rem;
     border-bottom: 1px solid var(--light-gray);
     padding-bottom: 1rem;
+    position: relative;
+}
+
+.theme-toggle {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--accent-color);
+    padding: 0.5rem;
+    border-radius: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 h1 {
