@@ -17,6 +17,10 @@ app.mount("/js", StaticFiles(directory="js"), name="js")
 async def read_index():
     return FileResponse("index.html")
 
+@app.get("/about", response_class=HTMLResponse)
+async def read_about():
+    return FileResponse("about.html")
+
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About InkTodos</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Additional styles specific to about page */
+        .about-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+            line-height: 1.7;
+            position: relative;
+        }
+        
+        /* Decorative corner elements */
+        .about-container::before,
+        .about-container::after {
+            content: "┌───┐";
+            font-family: monospace;
+            position: absolute;
+            white-space: pre;
+            color: var(--light-gray);
+        }
+        
+        .about-container::before {
+            top: 1rem;
+            left: 1rem;
+        }
+        
+        .about-container::after {
+            content: "└───┘";
+            bottom: 1rem;
+            right: 1rem;
+        }
+
+        .hero {
+            text-align: center;
+            margin: 2rem 0 3rem;
+        }
+
+        .tagline {
+            font-size: 1.3rem;
+            margin-top: 0.5rem;
+            color: var(--medium-gray);
+            font-style: italic;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--light-gray);
+            padding-bottom: 0.5rem;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: "─────";
+            font-family: monospace;
+            position: absolute;
+            right: 0;
+            bottom: 0.5rem;
+            color: var(--light-gray);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .feature {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            margin: 1rem 0 0.5rem;
+            text-align: center;
+        }
+
+        .feature-desc {
+            text-align: center;
+        }
+
+        .illustration {
+            margin: 1rem 0;
+            text-align: center;
+            line-height: 1;
+        }
+
+        .ascii-art {
+            font-family: monospace;
+            white-space: pre;
+            font-size: 0.9rem;
+            line-height: 1.2;
+            display: inline-block;
+            text-align: left;
+            margin: 0 auto;
+        }
+
+        .testimonial {
+            border-left: 3px solid var(--accent-color);
+            padding-left: 1.5rem;
+            margin: 2rem 0;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            text-align: right;
+            margin-top: 0.5rem;
+            font-style: normal;
+            font-weight: bold;
+        }
+
+        .cta {
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            border: none;
+        }
+        
+        .nav-links {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--light-gray);
+            position: relative;
+        }
+        
+        .nav-links::before,
+        .nav-links::after {
+            content: "·";
+            position: absolute;
+            top: 1rem;
+            font-size: 1.5rem;
+            color: var(--light-gray);
+        }
+        
+        .nav-links::before {
+            left: 30%;
+        }
+        
+        .nav-links::after {
+            right: 30%;
+        }
+
+        .nav-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        @media (min-width: 600px) {
+            .features {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="about-container">
+        <header class="hero">
+            <h1>InkTodos</h1>
+            <p class="tagline">Thoughtfully designed for e-readers, beautifully simple by nature</p>
+            
+            <div class="illustration">
+                <div class="ascii-art">
+   ╭───────────────────╮    ✧
+   │                   │  ✧
+   │  ☐ Read a book    │    ✧
+   │  ☑ Make tea       │  ✧
+   │  ☐ Take notes     │    ✧
+   │  ☐ Rest eyes      │  ✧
+   │                   │
+   ╰───────────────────╯
+                </div>
+            </div>
+        </header>
+        
+        <section class="section">
+            <h2 class="section-title">Why InkTodos?</h2>
+            <p>In a world of complex and distracting apps, InkTodos stands apart. Designed specifically for e-ink displays like Kindle and Kobo, it embraces the philosophy that a single-purpose tool done well brings more value than a hundred features you'll never use.</p>
+            
+            <div class="testimonial">
+                <p>"I've tried dozens of todo apps on my phone, but they all feel like work. InkTodos on my Kindle feels different – more like a companion to my reading, not a distraction from it."</p>
+                <p class="testimonial-author">— Emily, Writer & Kindle enthusiast</p>
+            </div>
+            
+            <p>InkTodos transforms your e-reader into a distraction-free productivity tool. As screens increasingly compete for our attention, your e-reader becomes a sanctuary of focus and intentionality.</p>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">Designed for E-ink, Designed for You</h2>
+            
+            <div class="features">
+                <div class="feature">
+                    <div class="illustration">
+                        <div class="ascii-art">
+  ┌─────────┐
+  │         │
+  │  ·····  │
+  │  ·····  │
+  │  ·····  │
+  │         │
+  └─────────┘
+   SIMPLICITY
+                        </div>
+                    </div>
+                    <h3 class="feature-title">Beautifully Simple</h3>
+                    <p class="feature-desc">No complicated workflows or nested categories. Just a clean, focused list of what matters today.</p>
+                </div>
+                
+                <div class="feature">
+                    <div class="illustration">
+                        <div class="ascii-art">
+  ┌─────────┐
+  │  ☑ ☐ ☐  │
+  │ ╱       │
+  │╱        │
+  │   ✗     │
+  │  WIFI   │
+  └─────────┘
+                        </div>
+                    </div>
+                    <h3 class="feature-title">Fully Offline</h3>
+                    <p class="feature-desc">Your data stays on your device – no accounts, no syncing, no internet connection required.</p>
+                </div>
+                
+                <div class="feature">
+                    <div class="illustration">
+                        <div class="ascii-art">
+  ┌─────────┐
+  │░░░░░░░░░│
+  │░░░░░░░░░│
+  │░░░░░░░░░│
+  │░░░░░░░░░│
+  └─────────┘
+  PERFORMANCE
+                        </div>
+                    </div>
+                    <h3 class="feature-title">E-ink Optimized</h3>
+                    <p class="feature-desc">High contrast visuals and lightweight code make it run smoothly on even the most basic e-readers.</p>
+                </div>
+                
+                <div class="feature">
+                    <div class="illustration">
+                        <div class="ascii-art">
+    ┌─────┐
+    │  │  │
+    │  │  │
+  ┌─┘  │  └─┐
+  │    │    │
+  │    V    │
+  └─────────┘
+                        </div>
+                    </div>
+                    <h3 class="feature-title">Daily Reset</h3>
+                    <p class="feature-desc">Start fresh each day. Yesterday's tasks don't pile up, creating a natural rhythm for your productivity.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2 class="section-title">The Digital Minimalist's Choice</h2>
+            <p>In an age of notification overload and attention-stealing apps, InkTodos represents a different path. It's built on three core principles:</p>
+            
+            <div class="illustration">
+                <div class="ascii-art">
+  ┌───────────┐   ┌───────────┐   ┌───────────┐
+  │    ☯      │   │     ⚡     │   │     ✿     │
+  │  FOCUS    │───│ SIMPLICITY│───│ INTENTION │
+  │           │   │           │   │           │
+  └───────────┘   └───────────┘   └───────────┘
+                </div>
+            </div>
+            
+            <p>When your tasks live on the same device as your books, something magical happens. The thoughtfulness of reading extends to your planning. Your todos become more intentional, more meaningful, and paradoxically, more likely to get done.</p>
+            
+            <div class="testimonial">
+                <p>"I used to have my todos on my phone, but they got lost among the notifications and social media. Moving them to my Kobo has been transformative – it's like they exist in a different, calmer mental space."</p>
+                <p class="testimonial-author">— Marcus, Digital Minimalist</p>
+            </div>
+        </section>
+
+        <div class="cta">
+            <a href="/" class="cta-button">Try InkTodos Now</a>
+        </div>
+        
+        <footer class="nav-links">
+            <a href="/" class="nav-link">« Back to InkTodos App</a>
+        </footer>
+    </div>
+</body>
+</html>

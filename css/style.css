@@ -155,3 +155,10 @@ input[type="checkbox"]:checked::after {
 a:focus, button:focus, input:focus {
     outline: 2px solid var(--focus-color);
 }
+
+/* Navigation links */
+.nav-link {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: bold;
+}
