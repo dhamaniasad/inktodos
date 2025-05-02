@@ -39,6 +39,16 @@ document.addEventListener('DOMContentLoaded', function() {
         dateDisplay.textContent = now.toLocaleDateString(undefined, options);
     }
     
+    // Get a consistent date key (YYYY-MM-DD format)
+    function getTodayKey() {
+        const now = new Date();
+        const year = now.getFullYear();
+        // Month is 0-indexed, so we add 1 and pad with 0 if needed
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
     // Load tasks from localStorage with error handling
     function loadTasks() {
         if (!isStorageAvailable) {
@@ -46,8 +56,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         try {
-            const today = new Date().toLocaleDateString();
-            let storedTasks = localStorage.getItem('tasks-' + today);
+            const todayKey = getTodayKey();
+            let storedTasks = localStorage.getItem('tasks-' + todayKey);
             return storedTasks ? JSON.parse(storedTasks) : [];
         } catch (error) {
             console.error('Error loading tasks:', error);
@@ -65,8 +75,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         try {
-            const today = new Date().toLocaleDateString();
-            localStorage.setItem('tasks-' + today, JSON.stringify(tasks));
+            const todayKey = getTodayKey();
+            localStorage.setItem('tasks-' + todayKey, JSON.stringify(tasks));
         } catch (error) {
             console.error('Error saving tasks:', error);
             storageStatus.textContent = '⚠ Storage error';
@@ -185,16 +195,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 if (key && key.startsWith('tasks-')) {
                     try {
+                        // Handle both old and new format keys
                         const dateStr = key.replace('tasks-', '');
-                        const dateParts = dateStr.split('/');
                         
-                        // Only proceed if the format looks valid
-                        if (dateParts.length === 3) {
-                            const taskDate = new Date(dateStr);
-                            
-                            if (!isNaN(taskDate.getTime()) && taskDate < thirtyDaysAgo) {
-                                keysToRemove.push(key);
-                            }
+                        let taskDate;
+                        
+                        // Try to parse the YYYY-MM-DD format first
+                        if (dateStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                            const [year, month, day] = dateStr.split('-').map(Number);
+                            // Month is 0-indexed in JS Date
+                            taskDate = new Date(year, month - 1, day);
+                        } 
+                        // Try locale format (which might be MM/DD/YYYY or similar)
+                        else {
+                            taskDate = new Date(dateStr);
+                        }
+                        
+                        if (!isNaN(taskDate.getTime()) && taskDate < thirtyDaysAgo) {
+                            keysToRemove.push(key);
                         }
                     } catch (parseError) {
                         console.error('Error parsing date:', parseError);

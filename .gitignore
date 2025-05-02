@@ -33,3 +33,4 @@ ENV/
 # OS specific
 .DS_Store
 Thumbs.db
+**/.claude/settings.local.json
