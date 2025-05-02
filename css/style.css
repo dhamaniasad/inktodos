@@ -1,0 +1,157 @@
+/* E-reader friendly styles with high contrast and simple design */
+:root {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --light-gray: #e0e0e0;
+    --medium-gray: #707070;
+    --completed-color: #aaaaaa;
+    --focus-color: #111111;
+    --accent-color: #333333;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Bookerly', 'Palatino', 'Georgia', serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    padding: 0.75rem;
+    max-width: 100%;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--light-gray);
+    padding-bottom: 1rem;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.date-display {
+    font-size: 1.2rem;
+    color: var(--medium-gray);
+}
+
+/* Form styles */
+#task-form {
+    display: flex;
+    margin-bottom: 2rem;
+    border: 1px solid var(--light-gray);
+}
+
+#task-input {
+    flex: 1;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: none;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+#add-task-btn {
+    padding: 0.75rem 1.5rem;
+    background-color: var(--accent-color);
+    color: var(--bg-color);
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Task list styles */
+#task-list {
+    list-style-type: none;
+}
+
+.task-item {
+    padding: 1.2rem 1rem;
+    border-bottom: 1px solid var(--light-gray);
+    display: flex;
+    align-items: center;
+}
+
+.empty-list {
+    text-align: center;
+    color: var(--medium-gray);
+    font-style: italic;
+}
+
+.task-text {
+    flex: 1;
+    font-size: 1.1rem;
+}
+
+.completed .task-text {
+    text-decoration: line-through;
+    color: var(--completed-color);
+}
+
+.delete-btn {
+    margin-left: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--medium-gray);
+}
+
+footer {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--medium-gray);
+}
+
+/* Make checkboxes more visible on e-readers */
+input[type="checkbox"] {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 1rem;
+    border: 2px solid var(--accent-color);
+    -webkit-appearance: none;
+    appearance: none;
+    display: inline-block;
+    position: relative;
+    border-radius: 0.2rem;
+    background-color: var(--bg-color);
+}
+
+input[type="checkbox"]:checked {
+    background-color: var(--accent-color);
+}
+
+input[type="checkbox"]:checked::after {
+    content: "✓";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2rem;
+    color: var(--bg-color);
+    font-weight: bold;
+}
+
+/* Focus states for accessibility */
+a:focus, button:focus, input:focus {
+    outline: 2px solid var(--focus-color);
+}
