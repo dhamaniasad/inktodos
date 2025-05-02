@@ -140,6 +140,23 @@ h2 {
 }
 
 /* Task list styles */
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.action-btn {
+    padding: 0.5rem 1rem;
+    background-color: var(--accent-color);
+    color: var(--bg-color);
+    border: none;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
 #task-list {
     list-style-type: none;
 }
@@ -165,6 +182,11 @@ h2 {
 .completed .task-text {
     text-decoration: line-through;
     color: var(--completed-color);
+}
+
+.rolled-over .task-text::before {
+    content: "↻ ";
+    color: var(--accent-color);
 }
 
 .delete-btn {

@@ -151,6 +151,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update progress bar
         updateProgressBar(tasks);
         
+        // Update Clear button visibility
+        updateClearButtonVisibility();
+        
         // Clear the current list
         taskList.innerHTML = '';
         
@@ -165,7 +168,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add each task to the list
         tasks.forEach(function(task, index) {
             const taskItem = document.createElement('li');
-            taskItem.className = task.completed ? 'task-item completed' : 'task-item';
+            let className = task.completed ? 'task-item completed' : 'task-item';
+            if (task.rolledOver) {
+                className += ' rolled-over';
+            }
+            taskItem.className = className;
             taskItem.dataset.index = index;
             
             const checkbox = document.createElement('input');
@@ -221,12 +228,98 @@ document.addEventListener('DOMContentLoaded', function() {
         renderTasks();
     }
     
+    // Simple confetti animation
+    function showConfetti(x, y) {
+        // Create confetti container
+        const confettiContainer = document.createElement('div');
+        confettiContainer.className = 'confetti-container';
+        confettiContainer.style.position = 'absolute';
+        confettiContainer.style.left = x + 'px';
+        confettiContainer.style.top = y + 'px';
+        confettiContainer.style.pointerEvents = 'none';
+        document.body.appendChild(confettiContainer);
+        
+        // Create confetti pieces
+        const colors = ['#555', '#777', '#999', '#bbb'];
+        const shapes = ['●', '■', '★', '✦'];
+        
+        // Number of particles (keeping it minimal for e-ink displays)
+        const particleCount = 10;
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'confetti-particle';
+            particle.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+            particle.style.position = 'absolute';
+            particle.style.color = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.fontSize = (Math.random() * 10 + 8) + 'px';
+            
+            // Random starting position around the center
+            particle.style.left = (Math.random() * 20 - 10) + 'px';
+            particle.style.top = (Math.random() * 20 - 10) + 'px';
+            
+            // Random movement
+            const angle = Math.random() * Math.PI * 2;
+            const distance = Math.random() * 40 + 10;
+            const duration = Math.random() * 1000 + 500;
+            
+            // Apply animation
+            particle.animate([
+                { transform: 'translate(0, 0)' },
+                { transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)` }
+            ], {
+                duration: duration,
+                easing: 'ease-out',
+                fill: 'forwards'
+            });
+            
+            confettiContainer.appendChild(particle);
+        }
+        
+        // Remove the confetti after animation completes
+        setTimeout(() => {
+            document.body.removeChild(confettiContainer);
+        }, 1500);
+    }
+
     // Toggle task completed status
     function toggleTaskStatus(index) {
         const tasks = loadTasks();
-        tasks[index].completed = !tasks[index].completed;
+        const wasCompleted = tasks[index].completed;
+        tasks[index].completed = !wasCompleted;
         saveTasks(tasks);
+        
+        // Show confetti only when completing a task (not when unchecking)
+        if (!wasCompleted) {
+            // Find the corresponding element in the DOM
+            const taskElement = document.querySelector(`#task-list li[data-index="${index}"]`);
+            if (taskElement) {
+                const rect = taskElement.getBoundingClientRect();
+                showConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
+            }
+        }
+        
         renderTasks();
+    }
+    
+    // Clear all rolled over tasks
+    function clearPendingTasks() {
+        const tasks = loadTasks();
+        // Keep all tasks that are either completed OR not rolled over
+        const filteredTasks = tasks.filter(task => task.completed || !task.rolledOver);
+        saveTasks(filteredTasks);
+        renderTasks();
+    }
+    
+    // Show or hide clear button depending on if we have rolled over tasks
+    function updateClearButtonVisibility() {
+        const clearPendingBtn = document.getElementById('clear-pending-btn');
+        if (!clearPendingBtn) return;
+        
+        const tasks = loadTasks();
+        const hasRolledOverTasks = tasks.some(task => task.rolledOver && !task.completed);
+        
+        clearPendingBtn.style.display = hasRolledOverTasks ? 'block' : 'none';
     }
     
     // Event Listeners
@@ -236,8 +329,70 @@ document.addEventListener('DOMContentLoaded', function() {
         taskInput.value = '';
     });
     
+    const clearPendingBtn = document.getElementById('clear-pending-btn');
+    if (clearPendingBtn) {
+        clearPendingBtn.addEventListener('click', clearPendingTasks);
+    }
+    
+    // Get yesterday's date key
+    function getYesterdayKey() {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const year = yesterday.getFullYear();
+        const month = String(yesterday.getMonth() + 1).padStart(2, '0');
+        const day = String(yesterday.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+    
+    // Rollover uncompleted tasks from yesterday
+    function rolloverTasks() {
+        if (!isStorageAvailable) {
+            return;
+        }
+        
+        try {
+            // First, check if we already did rollover today
+            const todayKey = getTodayKey();
+            const rolloverFlagKey = 'rollover-done-' + todayKey;
+            
+            // If we already did the rollover today, don't do it again
+            if (localStorage.getItem(rolloverFlagKey)) {
+                return;
+            }
+            
+            const yesterdayKey = getYesterdayKey();
+            const storedYesterdayTasks = localStorage.getItem('tasks-' + yesterdayKey);
+            
+            if (storedYesterdayTasks) {
+                const yesterdayTasks = JSON.parse(storedYesterdayTasks);
+                const uncompletedTasks = yesterdayTasks.filter(task => !task.completed);
+                
+                if (uncompletedTasks.length > 0) {
+                    // Get today's tasks
+                    const todayTasks = loadTasks();
+                    
+                    // Add uncompleted tasks to today's list
+                    uncompletedTasks.forEach(task => {
+                        // Add a note that this was rolled over
+                        task.rolledOver = true;
+                        todayTasks.push(task);
+                    });
+                    
+                    // Save the updated task list
+                    saveTasks(todayTasks);
+                }
+            }
+            
+            // Mark that we've done the rollover for today
+            localStorage.setItem(rolloverFlagKey, 'true');
+        } catch (error) {
+            console.error('Error rolling over tasks:', error);
+        }
+    }
+
     // Initialize the app
     updateDateDisplay();
+    rolloverTasks();
     renderTasks();
     
     // Archive old tasks (keeps localStorage clean by removing tasks older than 30 days)
@@ -256,10 +411,11 @@ document.addEventListener('DOMContentLoaded', function() {
             for (let i = 0; i < localStorage.length; i++) {
                 const key = localStorage.key(i);
                 
-                if (key && key.startsWith('tasks-')) {
+                // Clean up tasks and rollover flags that are older than 30 days
+                if (key && (key.startsWith('tasks-') || key.startsWith('rollover-done-'))) {
                     try {
                         // Handle both old and new format keys
-                        const dateStr = key.replace('tasks-', '');
+                        const dateStr = key.replace('tasks-', '').replace('rollover-done-', '');
                         
                         let taskDate;
                         
