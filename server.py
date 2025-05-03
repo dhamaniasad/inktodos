@@ -41,16 +41,48 @@ async def health_check():
     return {"status": "ok"}
 
 @app.post("/api/export")
-async def export_tasks(data: str = Form(...)):
+async def export_tasks(request: Request):
     """
     Generate a text file from the tasks data and send it as a downloadable file.
-    Expects a form submission with a 'data' field containing JSON.
+    Supports both JSON and form submissions.
     """
     try:
-        # Parse the JSON string from the form data
-        json_data = json.loads(data)
-        tasks = json_data.get("tasks", [])
-        date_string = json_data.get("date", datetime.now().strftime("%A, %B %d, %Y"))
+        # Try to get the data from different sources
+        data = None
+        
+        # Check content type
+        content_type = request.headers.get('content-type', '')
+        
+        if 'application/json' in content_type:
+            # Handle JSON request
+            raw_data = await request.json()
+            data = raw_data
+        elif 'application/x-www-form-urlencoded' in content_type or 'multipart/form-data' in content_type:
+            # Handle form submission
+            form_data = await request.form()
+            if 'data' in form_data:
+                data = json.loads(form_data['data'])
+        else:
+            # Try to parse body as JSON anyway
+            try:
+                raw_body = await request.body()
+                if raw_body:
+                    body_str = raw_body.decode()
+                    if body_str:
+                        data = json.loads(body_str)
+            except:
+                pass
+        
+        # If we couldn't get data from any source, return error
+        if not data:
+            return Response(
+                content="No data received or format not supported",
+                status_code=400
+            )
+        
+        # Extract task data
+        tasks = data.get("tasks", [])
+        date_string = data.get("date", datetime.now().strftime("%A, %B %d, %Y"))
         
         # Generate the content
         content = f"InkTodos - Tasks for {date_string}\r\n"

@@ -318,33 +318,78 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Try server-side download first
             const useServerExport = function() {
-                // Create a hidden form to post data to server
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = '/api/export';
-                form.target = '_blank'; // Open in new tab for Kindle compatibility
-                form.style.display = 'none';
-                
-                // Create a hidden input for JSON data
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'data';
-                input.value = JSON.stringify({
+                // Create data payload
+                const payload = {
                     tasks: tasks,
                     date: dateString
-                });
+                };
                 
-                // Add input to form and form to document
-                form.appendChild(input);
-                document.body.appendChild(form);
-                
-                // Submit the form
-                form.submit();
-                
-                // Clean up
-                setTimeout(function() {
-                    document.body.removeChild(form);
-                }, 1000);
+                // Try the fetch API first (more reliable)
+                if (window.fetch) {
+                    // Use fetch API
+                    fetch('/api/export', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Server returned error');
+                        }
+                        return response.blob();
+                    })
+                    .then(blob => {
+                        // Create download link
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        const date_for_filename = new Date().toISOString().split('T')[0];
+                        
+                        a.href = url;
+                        a.download = 'InkTodos-' + date_for_filename + '.txt';
+                        a.style.display = 'none';
+                        
+                        document.body.appendChild(a);
+                        a.click();
+                        
+                        // Cleanup
+                        setTimeout(() => {
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(url);
+                        }, 100);
+                    })
+                    .catch(error => {
+                        console.error('Export error:', error);
+                        // Fall back to clipboard method
+                        useClipboardExport();
+                    });
+                } else {
+                    // Fallback for browsers without fetch: Use form submission
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '/api/export';
+                    form.target = '_blank'; // Open in new tab for Kindle compatibility
+                    form.style.display = 'none';
+                    
+                    // Create a hidden input for JSON data
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'data';
+                    input.value = JSON.stringify(payload);
+                    
+                    // Add input to form and form to document
+                    form.appendChild(input);
+                    document.body.appendChild(form);
+                    
+                    // Submit the form
+                    form.submit();
+                    
+                    // Clean up
+                    setTimeout(function() {
+                        document.body.removeChild(form);
+                    }, 1000);
+                }
             };
             
             // Fallback to clipboard method
