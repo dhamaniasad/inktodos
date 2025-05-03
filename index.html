@@ -14,7 +14,7 @@
             </div>
             <h1>InkTodos</h1>
             <p class="date-display" id="current-date"></p>
-            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">☀</button>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode" type="button">☀</button>
         </header>
         
         <main>
@@ -26,14 +26,16 @@
             <div class="task-list-container">
                 <div class="task-header">
                     <h2>Today's Tasks</h2>
-                    <button id="clear-pending-btn" class="action-btn">Clear Rollover</button>
+                    <div class="task-actions">
+                        <button id="clear-pending-btn" class="action-btn">Clear Rollover</button>
+                    </div>
                 </div>
                 <ul id="task-list"></ul>
             </div>
         </main>
         
         <footer>
-            <p>Tap a task to mark it complete • <span id="storage-status">✓ Storage enabled</span> • <a href="about.html" class="nav-link">About</a></p>
+            <p>Tap a task to mark it complete • <span id="storage-status">✓ Storage enabled</span> • <a href="about.html" class="nav-link">About</a> • <a href="#" id="export-btn" class="nav-link">Export TXT</a></p>
         </footer>
     </div>
     

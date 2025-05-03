@@ -10,6 +10,12 @@
     --accent-color: #333333;
 }
 
+/* Disable all animations and transitions for the entire document */
+*, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+}
+
 /* Dark mode */
 .dark-mode {
     --bg-color: #121212;
@@ -21,18 +27,7 @@
     --accent-color: #bbbbbb;
 }
 
-/* Media query for devices that support prefers-color-scheme */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg-color: #121212;
-        --text-color: #f0f0f0;
-        --light-gray: #333333;
-        --medium-gray: #999999;
-        --completed-color: #666666;
-        --focus-color: #f0f0f0;
-        --accent-color: #bbbbbb;
-    }
-}
+/* Removed prefers-color-scheme media query as it interferes with manual toggle */
 
 * {
     box-sizing: border-box;
@@ -145,6 +140,11 @@ h2 {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
+}
+
+.task-actions {
+    display: flex;
+    gap: 0.5rem;
 }
 
 .action-btn {
