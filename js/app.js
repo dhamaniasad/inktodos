@@ -263,23 +263,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const distance = Math.random() * 40 + 10;
             const duration = Math.random() * 1000 + 500;
             
-            // Apply animation
-            particle.animate([
-                { transform: 'translate(0, 0)' },
-                { transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)` }
-            ], {
-                duration: duration,
-                easing: 'ease-out',
-                fill: 'forwards'
-            });
+            // Set final position directly without animation to prevent ghosting
+            particle.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`;
             
             confettiContainer.appendChild(particle);
         }
         
-        // Remove the confetti after animation completes
+        // Remove the confetti after a short display time
         setTimeout(() => {
             document.body.removeChild(confettiContainer);
-        }, 1500);
+        }, 800);
     }
 
     // Toggle task completed status
